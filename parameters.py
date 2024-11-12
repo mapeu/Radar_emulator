@@ -1,10 +1,10 @@
 # Установим количество движущихся целей и шумовых точек
-num_targets = 10
-num_noise = 300
-background_num = 1000
+NUM_TARGETS = 10
+NUM_NOISE = 300
+BACKGROUND_NUM = 1000
 
 # Установим параметры радара
-range_max = 100
+RANGE_MAX = 100
 
 # Устанавливаем количество кадров
-frames = 200
+FRAMES = 200
