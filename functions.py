@@ -1,7 +1,11 @@
+"""
+Модуль для генерации шума и анимации целей в симуляции радара.
+"""
+
 import numpy as np
 from point import Point
+from parameters import NUM_TARGETS  # Явный импорт необходимых параметров
 
-from parameters import *
 def generate_noise(targets: list[Point], num_noise: int) -> tuple[list[float], list[float]]:
     """
     Генерирует шум вокруг заданных целей.
@@ -29,9 +33,11 @@ def generate_background_noise(num: int, range_max: float) -> tuple[np.ndarray, n
     :param range_max: Максимальное значение диапазона.
     :return: Кортеж из двух массивов: координаты x и y фонового шума.
     """
-    return np.random.uniform(-range_max, range_max, num), np.random.uniform(-range_max, range_max, num)
+    return (np.random.uniform(-range_max, range_max, num),
+            np.random.uniform(-range_max, range_max, num))
 
-def animate(i: int, targets: list[Point], target_plot, noise_plot, background_plot, num_noise: int, background_num: int, range_max: float) -> tuple:
+def animate(i: int, targets: list[Point], target_plot, noise_plot, background_plot,
+            num_noise: int, background_num: int, range_max: float) -> tuple:
     """
     Обновляет состояние анимации на каждом кадре.
 
@@ -51,7 +57,10 @@ def animate(i: int, targets: list[Point], target_plot, noise_plot, background_pl
         target.y += target.vy
 
     # Удаление целей, вышедших за пределы диапазона
-    targets = [target for target in targets if np.abs(target.x) <= range_max and np.abs(target.y) <= range_max]
+    targets = [
+        target for target in targets
+        if np.abs(target.x) <= range_max and np.abs(target.y) <= range_max
+    ]
 
     # Добавление новых целей, если их недостаточно
     while len(targets) < NUM_TARGETS:
