@@ -36,6 +36,14 @@ def generate_background_noise(num: int, range_max: float) -> tuple[np.ndarray, n
     return (np.random.uniform(-range_max, range_max, num),
             np.random.uniform(-range_max, range_max, num))
 
+
+def write_all_points_to_file(filename, targets, noise_x, noise_y, frame):
+    with open(filename, 'a') as f:  # Открываем файл в режиме добавления
+        for target in targets:
+            f.write(f"Frame: {frame}, Target: x: {target.x:.2f}, y: {target.y:.2f}\n")
+        for x, y in zip(noise_x, noise_y):
+            f.write(f"Frame: {frame}, Noise: x: {x:.2f}, y: {y:.2f}\n")
+
 def animate(i: int, targets: list[Point], target_plot, noise_plot, background_plot,
             num_noise: int, background_num: int, range_max: float) -> tuple:
     """

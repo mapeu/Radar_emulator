@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 from parameters import NUM_TARGETS, NUM_NOISE, BACKGROUND_NUM, RANGE_MAX, FRAMES
 from point import Point
-from functions import generate_noise, generate_background_noise, animate
+from functions import generate_noise, generate_background_noise, write_all_points_to_file, animate
 
 # Создаем фигуру и оси
 fig, ax = plt.subplots()
@@ -42,13 +42,15 @@ noise_plot, = ax.plot(noise_x, noise_y, 'ro', markersize=2, alpha=0.3)
 if __name__ == "__main__":
     # Создание анимации
     ani = animation.FuncAnimation(
-        fig,
-        animate,
-        fargs=(targets, target_plot, noise_plot, background_plot,
-                NUM_NOISE, BACKGROUND_NUM, RANGE_MAX),
-        frames=FRAMES,
-        interval=50
+        fig, animate, fargs=(targets, target_plot, noise_plot, background_plot, NUM_NOISE,
+                             BACKGROUND_NUM, RANGE_MAX),
+        frames=FRAMES, interval=50
     )
+
+    for frame in range(1, FRAMES + 1):  # Начинаем с 1
+        # Генерация шума для текущих целей
+        noise_x, noise_y = generate_noise(targets, NUM_NOISE)
+        write_all_points_to_file('cluster/all_points_data.txt', targets, noise_x, noise_y, frame)
 
     # Отображение графика
     plt.show()
