@@ -22,7 +22,7 @@ def load_data_with_frames(filename: str) -> Tuple[np.ndarray, List[int], int]:
         filename (str): Путь к файлу, содержащему данные.
 
     Returns:
-        Tuple[np.ndarray, List[int], int]: 
+        Tuple[np.ndarray, List[int], int]:
             - Массив координат точек (n, 2).
             - Список кадров, к которым принадлежат точки.
             - Количество целей (Target) в данных.
@@ -58,7 +58,7 @@ def load_data_with_frames(filename: str) -> Tuple[np.ndarray, List[int], int]:
 
     return np.array(points), frames, target_count  # Возвращаем данные, кадры и количество целей
 
-def perform_clustering(data: np.ndarray, eps: float = 0.5, min_samples: int = 5) -> np.ndarray:
+def perform_clustering(data: np.ndarray, eps: float = 0.3, min_samples: int = 2) -> np.ndarray:
     """
     Применение алгоритма DBSCAN для кластеризации.
 
@@ -73,7 +73,6 @@ def perform_clustering(data: np.ndarray, eps: float = 0.5, min_samples: int = 5)
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
     labels = dbscan.fit_predict(data)
     return labels
-
 
 def plot_clusters(data: np.ndarray, labels: np.ndarray, ax) -> None:
     """
@@ -97,15 +96,14 @@ def plot_clusters(data: np.ndarray, labels: np.ndarray, ax) -> None:
 
         class_member_mask = labels == k
         ax.scatter(data[class_member_mask, 0], data[class_member_mask, 1],
-                   c=color, label=f'Cluster {k}', edgecolor='k', s=20)  # Уменьшили размер точек
+                   c=color, label=f'Cluster {k}', edgecolor='k', s=50)  # Увеличили размер точек
 
     ax.set_title('Кластеризация DBSCAN')
     ax.set_xlabel('Координата X')
     ax.set_ylabel('Координата Y')
     ax.legend()
 
-
-def animate_clustering(data: np.ndarray, ax, step: int = 10) -> None:
+def animate_clustering(data: np.ndarray, ax, step: int = 20) -> None:
     """
     Анимация кластеризации.
 
@@ -120,10 +118,9 @@ def animate_clustering(data: np.ndarray, ax, step: int = 10) -> None:
             # Нормализация данных
             current_data = StandardScaler().fit_transform(current_data)
             start_time = time.time()  # Начало отсчета времени обработки
-            labels = perform_clustering(current_data, eps=0.3, min_samples=2)
+            labels = perform_clustering(current_data, eps=0.3, min_samples=2)  # Уменьшили eps
             end_time = time.time()  # Конец отсчета времени обработки
             # Вывод времени обработки
-            print(
-                f"Время обработки кадров {i} - {i + step - 1}: {end_time - start_time:.2f} секунд")
+            print(f"Время обработки кадров {i} - {i + step - 1}: {end_time - start_time:.2f} секунд")
             plot_clusters(current_data, labels, ax)
-            plt.pause(0.5)  # Пауза для визуализации
+            plt.pause(0.5)
